@@ -1,0 +1,58 @@
+
+<html>
+<head>
+<title>Streamer.bot Shout out player</title>
+ 
+<script>
+//Thanks for the help from Nate1280 and WhipStickGoStop!
+
+function showVideo () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const video = urlParams.get('video');
+    const thumbnailUrl = urlParams.get('thumbnail_url');
+    const videoSrc = thumbnailUrl.replace(/(.*)-preview-.*/, '$1.mp4');
+    const videoElement = document.getElementById('videoplayer');
+videoElement.src = videoSrc;
+    
+}
+function shoutout()
+{
+    let firstrun = true;
+
+// parse url params
+const urlParams = new URLSearchParams(window.location.search);
+const user = urlParams.get('user');
+const image = urlParams.get('image');
+const video = urlParams.get('video');
+const time = urlParams.get('time');
+const thumbnailUrl = urlParams.get('thumbnail_url');
+
+// generate mp4 url
+
+
+// apply mp4 to video element so it's ready to play
+
+
+
+document.getElementById('imagebox2').innerHTML="<img src='"+image+"' width='100%'/>";
+setTimeout('showVideo()',1000);    
+}
+function cleanup()
+{
+document.getElementById('videocontainer').innerHTML="";
+document.getElementById('imagebox2').innerHTML="";
+}
+</script>
+
+
+</head>
+<body onload="shoutout();">
+
+
+<div id="videocontainer" style="position:absolute; left: 0px; top: 0px; width: 800px;z-index:10"; text-align: center >
+<video id='videoplayer' style="width:100%" autoplay onended="setTimeout('cleanup()',500);"></video>
+</div>
+<div id="imagebox2" style="position:absolute; left: 250px; top: 75px; height: 450; text-align: center; z-index: 1">
+</div>
+</body>
+</html>
