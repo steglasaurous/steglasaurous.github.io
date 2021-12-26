@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Trigger Streamer.bot actions from Audica Websocket Events | Steglasaurous</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Trigger Streamer.bot actions from Audica Websocket Events" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Want to trigger streamer.bot actions from Audica Websocket events? Here’s a quick-and-dirty way to do just that. :) Pre-requisites This depends on the Audica Websocket Server mod be installed in Audica. This also requires the excellent Streamer.bot app be installed as well. Setup the Basics In these steps, we’ll setup the websocket connection to Audica, and turning the event messages that are emitted from it into action arguments (variables) that can be accessed in subsequent subactions. Add a new action in your actions list. I called mine “Audica Websocket Message”. This will be the thing that takes apart the websocket message and puts it into variables you can use in subsequent subactions. Add a new Execute C# Code sub-action Paste this code in: using System; using Newtonsoft.Json.Linq; public class CPHInline { public bool Execute() { var audicaEvent = JObject.Parse(args[&quot;message&quot;].ToString()); CPH.SetArgument(&quot;audicaEventType&quot;, (string)audicaEvent[&quot;eventType&quot;]); foreach (JProperty prop in (JToken)audicaEvent[&quot;data&quot;]) { CPH.SetArgument(prop.Name, prop.Value.ToString()); } return true; } } At the bottom, goto the references tab and make sure these files are added as references: mscorlib.dll System.dll System.Core.dll You can right-click on the list to choose the dll to reference - it should put you right in the Microsoft.Net\Framework\v4.0.xxxx folder and should just be a matter of finding the files named above. Click “Save and Compile”. Under “Servers/Clients”, goto “Websocket Clients”, and add a new client. Endpoint: ws://127.0.0.1:8085/AudicaStats (or set the IP address to the machine Audica is running on if streamer.bot isn’t running on the same machine. Under Actions &gt; Message: Set this to your Action you setup in step 1. (Audica Websocket Messages in my case) Setup Actions to trigger So at this point, we have code that’s taking the Audica events and turning them into variables your subactions can act on. Let’s do the songSelected event to get the selected song. Create a new action that will be the thing that will do something when there’s a song change. I called mine “Set Song Info”. For testing, I threw in a message to send the song title to my twitch chat. I created a “Twitch &gt; Send Message” sub-action and in the message contents I put: %songName% is on now!. Go back to your Audica Websockets Message action. Add an If action (under Logic). This is where you can capture the events coming from audica. In our case we’re gonna catch the SongSelected event which contains the details of the song that was chosen. I pasted a screenshot here. And boom, it werks! :slight_smile: Available Variables You may be asking now “Cool, uh, wtf are the variable names I can use?” Answer: here they are: https://github.com/steglasaurous/audica-websocket-server This lists all the websocket events my mod will spit out from the game. You access this via the audicaEventType variable like I did with that If action above. All the possible event types are listed (like SongSelected, SongRestart, SongProgress, etc.) Also all the stuff listed under “data” for each event is available as variables. ex: In that link above, the “SongSelected” event looks like this: { &quot;eventType&quot;: &quot;SongSelected&quot;, &quot;data&quot;: { &quot;songId&quot;: &quot;EnvelopeVIP-Continuum_a436d6bf85e13804eae44e072e87c387&quot;, &quot;songName&quot;: &quot;Envelope VIP&quot;, &quot;songArtist&quot;: &quot;TheFatRat&quot;, &quot;songAuthor&quot;: &quot;Continuum&quot;, &quot;difficulty&quot;: &quot;Expert&quot;, &quot;classification&quot;: &quot;extras&quot;, &quot;songLength&quot;: &quot;2:51&quot;, &quot;ticksTotal&quot;: 130400.0 } } So in my “Set Song” action I did above, I could add things like “%songName% by %songArtist% mapped by %songAuthor% is playing.” Hope that’s helpful! No doubt it’s a lot. If you have questions or discussion points, feel free to drop into my discord server here! Steg." />
+<meta property="og:description" content="Want to trigger streamer.bot actions from Audica Websocket events? Here’s a quick-and-dirty way to do just that. :) Pre-requisites This depends on the Audica Websocket Server mod be installed in Audica. This also requires the excellent Streamer.bot app be installed as well. Setup the Basics In these steps, we’ll setup the websocket connection to Audica, and turning the event messages that are emitted from it into action arguments (variables) that can be accessed in subsequent subactions. Add a new action in your actions list. I called mine “Audica Websocket Message”. This will be the thing that takes apart the websocket message and puts it into variables you can use in subsequent subactions. Add a new Execute C# Code sub-action Paste this code in: using System; using Newtonsoft.Json.Linq; public class CPHInline { public bool Execute() { var audicaEvent = JObject.Parse(args[&quot;message&quot;].ToString()); CPH.SetArgument(&quot;audicaEventType&quot;, (string)audicaEvent[&quot;eventType&quot;]); foreach (JProperty prop in (JToken)audicaEvent[&quot;data&quot;]) { CPH.SetArgument(prop.Name, prop.Value.ToString()); } return true; } } At the bottom, goto the references tab and make sure these files are added as references: mscorlib.dll System.dll System.Core.dll You can right-click on the list to choose the dll to reference - it should put you right in the Microsoft.Net\Framework\v4.0.xxxx folder and should just be a matter of finding the files named above. Click “Save and Compile”. Under “Servers/Clients”, goto “Websocket Clients”, and add a new client. Endpoint: ws://127.0.0.1:8085/AudicaStats (or set the IP address to the machine Audica is running on if streamer.bot isn’t running on the same machine. Under Actions &gt; Message: Set this to your Action you setup in step 1. (Audica Websocket Messages in my case) Setup Actions to trigger So at this point, we have code that’s taking the Audica events and turning them into variables your subactions can act on. Let’s do the songSelected event to get the selected song. Create a new action that will be the thing that will do something when there’s a song change. I called mine “Set Song Info”. For testing, I threw in a message to send the song title to my twitch chat. I created a “Twitch &gt; Send Message” sub-action and in the message contents I put: %songName% is on now!. Go back to your Audica Websockets Message action. Add an If action (under Logic). This is where you can capture the events coming from audica. In our case we’re gonna catch the SongSelected event which contains the details of the song that was chosen. I pasted a screenshot here. And boom, it werks! :slight_smile: Available Variables You may be asking now “Cool, uh, wtf are the variable names I can use?” Answer: here they are: https://github.com/steglasaurous/audica-websocket-server This lists all the websocket events my mod will spit out from the game. You access this via the audicaEventType variable like I did with that If action above. All the possible event types are listed (like SongSelected, SongRestart, SongProgress, etc.) Also all the stuff listed under “data” for each event is available as variables. ex: In that link above, the “SongSelected” event looks like this: { &quot;eventType&quot;: &quot;SongSelected&quot;, &quot;data&quot;: { &quot;songId&quot;: &quot;EnvelopeVIP-Continuum_a436d6bf85e13804eae44e072e87c387&quot;, &quot;songName&quot;: &quot;Envelope VIP&quot;, &quot;songArtist&quot;: &quot;TheFatRat&quot;, &quot;songAuthor&quot;: &quot;Continuum&quot;, &quot;difficulty&quot;: &quot;Expert&quot;, &quot;classification&quot;: &quot;extras&quot;, &quot;songLength&quot;: &quot;2:51&quot;, &quot;ticksTotal&quot;: 130400.0 } } So in my “Set Song” action I did above, I could add things like “%songName% by %songArtist% mapped by %songAuthor% is playing.” Hope that’s helpful! No doubt it’s a lot. If you have questions or discussion points, feel free to drop into my discord server here! Steg." />
+<link rel="canonical" href="/audica/streamer.bot/streaming/twitch/2021/12/26/audica-websocket-streamerbot.html" />
+<meta property="og:url" content="/audica/streamer.bot/streaming/twitch/2021/12/26/audica-websocket-streamerbot.html" />
+<meta property="og:site_name" content="Steglasaurous" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-12-26T18:12:49+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Trigger Streamer.bot actions from Audica Websocket Events" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"/audica/streamer.bot/streaming/twitch/2021/12/26/audica-websocket-streamerbot.html","mainEntityOfPage":{"@type":"WebPage","@id":"/audica/streamer.bot/streaming/twitch/2021/12/26/audica-websocket-streamerbot.html"},"headline":"Trigger Streamer.bot actions from Audica Websocket Events","dateModified":"2021-12-26T18:12:49+00:00","datePublished":"2021-12-26T18:12:49+00:00","description":"Want to trigger streamer.bot actions from Audica Websocket events? Here’s a quick-and-dirty way to do just that. :) Pre-requisites This depends on the Audica Websocket Server mod be installed in Audica. This also requires the excellent Streamer.bot app be installed as well. Setup the Basics In these steps, we’ll setup the websocket connection to Audica, and turning the event messages that are emitted from it into action arguments (variables) that can be accessed in subsequent subactions. Add a new action in your actions list. I called mine “Audica Websocket Message”. This will be the thing that takes apart the websocket message and puts it into variables you can use in subsequent subactions. Add a new Execute C# Code sub-action Paste this code in: using System; using Newtonsoft.Json.Linq; public class CPHInline { public bool Execute() { var audicaEvent = JObject.Parse(args[&quot;message&quot;].ToString()); CPH.SetArgument(&quot;audicaEventType&quot;, (string)audicaEvent[&quot;eventType&quot;]); foreach (JProperty prop in (JToken)audicaEvent[&quot;data&quot;]) { CPH.SetArgument(prop.Name, prop.Value.ToString()); } return true; } } At the bottom, goto the references tab and make sure these files are added as references: mscorlib.dll System.dll System.Core.dll You can right-click on the list to choose the dll to reference - it should put you right in the Microsoft.Net\\Framework\\v4.0.xxxx folder and should just be a matter of finding the files named above. Click “Save and Compile”. Under “Servers/Clients”, goto “Websocket Clients”, and add a new client. Endpoint: ws://127.0.0.1:8085/AudicaStats (or set the IP address to the machine Audica is running on if streamer.bot isn’t running on the same machine. Under Actions &gt; Message: Set this to your Action you setup in step 1. (Audica Websocket Messages in my case) Setup Actions to trigger So at this point, we have code that’s taking the Audica events and turning them into variables your subactions can act on. Let’s do the songSelected event to get the selected song. Create a new action that will be the thing that will do something when there’s a song change. I called mine “Set Song Info”. For testing, I threw in a message to send the song title to my twitch chat. I created a “Twitch &gt; Send Message” sub-action and in the message contents I put: %songName% is on now!. Go back to your Audica Websockets Message action. Add an If action (under Logic). This is where you can capture the events coming from audica. In our case we’re gonna catch the SongSelected event which contains the details of the song that was chosen. I pasted a screenshot here. And boom, it werks! :slight_smile: Available Variables You may be asking now “Cool, uh, wtf are the variable names I can use?” Answer: here they are: https://github.com/steglasaurous/audica-websocket-server This lists all the websocket events my mod will spit out from the game. You access this via the audicaEventType variable like I did with that If action above. All the possible event types are listed (like SongSelected, SongRestart, SongProgress, etc.) Also all the stuff listed under “data” for each event is available as variables. ex: In that link above, the “SongSelected” event looks like this: { &quot;eventType&quot;: &quot;SongSelected&quot;, &quot;data&quot;: { &quot;songId&quot;: &quot;EnvelopeVIP-Continuum_a436d6bf85e13804eae44e072e87c387&quot;, &quot;songName&quot;: &quot;Envelope VIP&quot;, &quot;songArtist&quot;: &quot;TheFatRat&quot;, &quot;songAuthor&quot;: &quot;Continuum&quot;, &quot;difficulty&quot;: &quot;Expert&quot;, &quot;classification&quot;: &quot;extras&quot;, &quot;songLength&quot;: &quot;2:51&quot;, &quot;ticksTotal&quot;: 130400.0 } } So in my “Set Song” action I did above, I could add things like “%songName% by %songArtist% mapped by %songAuthor% is playing.” Hope that’s helpful! No doubt it’s a lot. If you have questions or discussion points, feel free to drop into my discord server here! Steg.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Steglasaurous" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Steglasaurous</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Trigger Streamer.bot actions from Audica Websocket Events</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-12-26T18:12:49+00:00" itemprop="datePublished">Dec 26, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Want to trigger streamer.bot actions from Audica Websocket events?  Here’s a quick-and-dirty way
+to do just that. :)</p>
+
+<h2 id="pre-requisites">Pre-requisites</h2>
+
+<ul>
+  <li>This depends on the <a href="https://github.com/steglasaurous/audica-websocket-server">Audica Websocket Server</a> mod be installed in Audica.</li>
+  <li>This also requires the excellent <a href="https://streamer.bot">Streamer.bot</a> app be installed as well.</li>
+</ul>
+
+<h2 id="setup-the-basics">Setup the Basics</h2>
+
+<p>In these steps, we’ll setup the websocket connection to Audica, and turning the event messages
+that are emitted from it into action arguments (variables) that can be accessed in subsequent subactions.</p>
+
+<ol>
+  <li>
+    <p>Add a new action in your actions list.  I called mine “Audica Websocket Message”. This will be the thing that takes apart the websocket message and puts it into variables you can use in subsequent subactions.</p>
+  </li>
+  <li>Add a new Execute C# Code sub-action</li>
+  <li>
+    <p>Paste this code in:</p>
+
+    <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Newtonsoft.Json.Linq</span><span class="p">;</span>
+   
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CPHInline</span>
+<span class="p">{</span>
+<span class="k">public</span> <span class="kt">bool</span> <span class="nf">Execute</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="kt">var</span> <span class="n">audicaEvent</span> <span class="p">=</span> <span class="n">JObject</span><span class="p">.</span><span class="nf">Parse</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s">"message"</span><span class="p">].</span><span class="nf">ToString</span><span class="p">());</span>
+   
+        <span class="n">CPH</span><span class="p">.</span><span class="nf">SetArgument</span><span class="p">(</span><span class="s">"audicaEventType"</span><span class="p">,</span> <span class="p">(</span><span class="kt">string</span><span class="p">)</span><span class="n">audicaEvent</span><span class="p">[</span><span class="s">"eventType"</span><span class="p">]);</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="n">JProperty</span> <span class="n">prop</span> <span class="k">in</span> <span class="p">(</span><span class="n">JToken</span><span class="p">)</span><span class="n">audicaEvent</span><span class="p">[</span><span class="s">"data"</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">CPH</span><span class="p">.</span><span class="nf">SetArgument</span><span class="p">(</span><span class="n">prop</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">prop</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="nf">ToString</span><span class="p">());</span>
+        <span class="p">}</span>
+   
+        <span class="k">return</span> <span class="k">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>At the bottom, goto the references tab and make sure these files are added as references:</p>
+
+    <ul>
+      <li>mscorlib.dll</li>
+      <li>System.dll</li>
+      <li>System.Core.dll</li>
+    </ul>
+
+    <p>You can right-click on the list to choose the dll to reference - it should put you right in the Microsoft.Net\Framework\v4.0.xxxx folder and should just be a matter of finding the files named above.</p>
+  </li>
+  <li>
+    <p>Click “Save and Compile”.</p>
+  </li>
+  <li>
+    <p>Under “Servers/Clients”, goto “Websocket Clients”, and add a new client.</p>
+
+    <ul>
+      <li>Endpoint: <code class="language-plaintext highlighter-rouge">ws://127.0.0.1:8085/AudicaStats</code> (or set the IP address to the machine Audica is running on if streamer.bot isn’t running on the same machine.</li>
+      <li>Under Actions &gt; Message: Set this to your Action you setup in step 1.  (Audica Websocket Messages in my case)</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="setup-actions-to-trigger">Setup Actions to trigger</h2>
+
+<p>So at this point, we have code that’s taking the Audica events and turning them into variables your subactions can act on.  Let’s do the songSelected event to get the selected song.</p>
+
+<ol>
+  <li>Create a new action that will be the thing that will do something when there’s a song change.  I called mine “Set Song Info”.</li>
+  <li>For testing, I threw in a message to send the song title to my twitch chat.  I created a “Twitch &gt; Send Message” sub-action and in the message contents I put:  %songName% is on now!.</li>
+  <li>Go back to your Audica Websockets Message action.   Add an If action (under Logic).  This is where you can capture the events coming from audica.  In our case we’re gonna catch the SongSelected event which contains the details of the song that was chosen.   I pasted a screenshot here.
+<img src="img.png" alt="img.png" /></li>
+</ol>
+
+<p>And boom, it werks! :slight_smile:</p>
+
+<h2 id="available-variables">Available Variables</h2>
+
+<p>You may be asking now “Cool, uh, wtf are the variable names I can use?”</p>
+
+<p>Answer: here they are: https://github.com/steglasaurous/audica-websocket-server</p>
+
+<p>This lists all the websocket events my mod will spit out from the game.  You access this via the audicaEventType variable like I did with that If action above.  All the possible event types are listed (like SongSelected, SongRestart, SongProgress, etc.)</p>
+
+<p>Also all the stuff listed under “data” for each event is available as variables.  ex: In that link above, the “SongSelected” event looks like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+</span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SongSelected"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"songId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EnvelopeVIP-Continuum_a436d6bf85e13804eae44e072e87c387"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"songName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Envelope VIP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"songArtist"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TheFatRat"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"songAuthor"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Continuum"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"difficulty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Expert"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"classification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"extras"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"songLength"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2:51"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"ticksTotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">130400.0</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>So in my “Set Song” action I did above, I could add things like “%songName% by %songArtist% mapped by %songAuthor% is playing.”</p>
+
+<p>Hope that’s helpful!  No doubt it’s a lot.  If you have questions or discussion points, feel free to drop into my discord
+server <a href="https://discord.gg/j6qArwGDu6">here</a>!</p>
+
+<p>Steg.</p>
+
+  </div><a class="u-url" href="/audica/streamer.bot/streaming/twitch/2021/12/26/audica-websocket-streamerbot.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Steglasaurous</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Steglasaurous</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/steglasaurous"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">steglasaurous</span></a></li><li><a href="https://www.twitter.com/steglasaurous"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">steglasaurous</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Random scratchings from a dinosaur.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
