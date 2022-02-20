@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Add bot responses to !asr twitch commands in Audica | Steglasaurous</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="Add bot responses to !asr twitch commands in Audica" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Here’s how to add twitch responses to !asr commands for Audica. Admittedly, this isn’t the cleanest or simplest solution, but it works. :) Prerequisites Make sure these are installed before continuing: SongRequest mod v2.1.0 or better (released on Feb 19 2022) AudicaWebsocketServer mod v1.1 or better Streamer.bot installed and connected to Twitch. (tested on v0.1.7 but earlier versions should work) Step 1: Load actions into Streamer.bot In Streamer.bot, goto the Actions tab. Right-click anywhere in the actions list on the left, and click on Import. Copy the giant piece of text below, and in the text box at the top, paste it. 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 Click on Import. This will import several actions that deal with processing the websocket messages from Audica and the response messages that go to your twitch chat. Step 2: Fix one thing There will be one reference missing from one of the C# subactions, so we need to fill it in. In the Actions tab, click on Audica Websocket Server. In the Subactions list on the right, double-click on Execute Code. At the bottom set of tabs, click on References. In the list of references, right-click and select Add reference from file.... By default, it should put you in the correct directory where the right files are. There is one missing file, add this file: System.Core.dll Once done, your references should look like this: Click Save and Compile. Step 3: Setup the websocket client in streamer.bot for Audica In the “Servers” tab, goto the “Websocket Clients” tab. Right-click and add a new websocket client. Fill in the following parameters: Name: Audica Websocket (This is what I used but it can be anything) Endpoint: ws://127.0.0.1:8085/AudicaStats Ensure Auto Connect on Startup and Reconnect on Disconnect are checked. Under Actions, for the Message action, click the button and choose Audica Websocket Message Your settings should look similar to this: Click OK. Step 4: Test it! Fire up Audica. Once it’s started (at the Audica title screen at least), try requesting a song in your twitch chat. ex: !asr kepler. You should see a response like this: Troubleshooting If you didn’t see anything right away, in streamer.bot, goto the Servers/Clients tab, click on Websocket Clients, and make sure the Audica websocket client is connected. You can right-click on it and click Connect to trigger a connection attempt in case it hasn’t tried to connect. Also make sure you are using the latest versions of the AudicaWebsocketServer mod and the SongRequest mod. Enjoy! If you have questions or discussion points, feel free to drop into my discord server here! Steg." />
+<meta property="og:description" content="Here’s how to add twitch responses to !asr commands for Audica. Admittedly, this isn’t the cleanest or simplest solution, but it works. :) Prerequisites Make sure these are installed before continuing: SongRequest mod v2.1.0 or better (released on Feb 19 2022) AudicaWebsocketServer mod v1.1 or better Streamer.bot installed and connected to Twitch. (tested on v0.1.7 but earlier versions should work) Step 1: Load actions into Streamer.bot In Streamer.bot, goto the Actions tab. Right-click anywhere in the actions list on the left, and click on Import. Copy the giant piece of text below, and in the text box at the top, paste it. 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 Click on Import. This will import several actions that deal with processing the websocket messages from Audica and the response messages that go to your twitch chat. Step 2: Fix one thing There will be one reference missing from one of the C# subactions, so we need to fill it in. In the Actions tab, click on Audica Websocket Server. In the Subactions list on the right, double-click on Execute Code. At the bottom set of tabs, click on References. In the list of references, right-click and select Add reference from file.... By default, it should put you in the correct directory where the right files are. There is one missing file, add this file: System.Core.dll Once done, your references should look like this: Click Save and Compile. Step 3: Setup the websocket client in streamer.bot for Audica In the “Servers” tab, goto the “Websocket Clients” tab. Right-click and add a new websocket client. Fill in the following parameters: Name: Audica Websocket (This is what I used but it can be anything) Endpoint: ws://127.0.0.1:8085/AudicaStats Ensure Auto Connect on Startup and Reconnect on Disconnect are checked. Under Actions, for the Message action, click the button and choose Audica Websocket Message Your settings should look similar to this: Click OK. Step 4: Test it! Fire up Audica. Once it’s started (at the Audica title screen at least), try requesting a song in your twitch chat. ex: !asr kepler. You should see a response like this: Troubleshooting If you didn’t see anything right away, in streamer.bot, goto the Servers/Clients tab, click on Websocket Clients, and make sure the Audica websocket client is connected. You can right-click on it and click Connect to trigger a connection attempt in case it hasn’t tried to connect. Also make sure you are using the latest versions of the AudicaWebsocketServer mod and the SongRequest mod. Enjoy! If you have questions or discussion points, feel free to drop into my discord server here! Steg." />
+<link rel="canonical" href="/audica/streamer.bot/streaming/twitch/2022/02/20/audica-bot-responses.html" />
+<meta property="og:url" content="/audica/streamer.bot/streaming/twitch/2022/02/20/audica-bot-responses.html" />
+<meta property="og:site_name" content="Steglasaurous" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-02-20T03:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Add bot responses to !asr twitch commands in Audica" />
+<script type="application/ld+json">
+{"description":"Here’s how to add twitch responses to !asr commands for Audica. Admittedly, this isn’t the cleanest or simplest solution, but it works. :) Prerequisites Make sure these are installed before continuing: SongRequest mod v2.1.0 or better (released on Feb 19 2022) AudicaWebsocketServer mod v1.1 or better Streamer.bot installed and connected to Twitch. (tested on v0.1.7 but earlier versions should work) Step 1: Load actions into Streamer.bot In Streamer.bot, goto the Actions tab. Right-click anywhere in the actions list on the left, and click on Import. Copy the giant piece of text below, and in the text box at the top, paste it. TlM0RR+LCAAAAAAABADdWVtv6kgSfl9p/4MVKdKuNI7a7WvPG5DgmCTMCQkYWPahbwYfbOyxDcQZzX+fsoFNQjaTcM7JuUUigLu7uqq+r6qrmj/++Q9FOVrJLA+TxdGvivZL/WBBYwnfjhpLEXKqNJNC6ck8TRa5zI82UygvYEkOs/5TfVeUPzZvMBSKai12sOPYtqE6hh2oBqWBSpkQKmFMcN0WXEqxkVUv+n0pl9Wei2UUPTyVC8oiWckrsqV8eL6noC9ZnvC5LJQrmed0Kh8JnmbJMq3m9mZlMYsVF5YqN8liqvwGdke0fDSXRmta5r1l5YqARvmjHTO6EEncqK1+PsqTBV9mmVwUz8eeeeqJtw40p54uZM6zMN2qcrQ3OpcybUThSj5TZWOIDCQoyuWeRvVg69fJxA/B0nU+mVyFPEvyJChOume3k0k7Ay3XSTafTFbGCTrRka6RySTOeZJFITsRUfRUk0+Td1PmhYy/sLRWksla5GOJ/33qGFYWspWIGggx7KYs5tO+Ht0Ld1D8tkYXu2e38UAXLllyTGLRMi/gfXk5v0vZ4sw+vU66rUVTG8V36ahsfmRu+56XzdP+2azD4BmL+zCed1vTaC38Tk79q+koJivWaralO/gohr3oojWvxitZnVa/e33TMq8YFmdjv6ONy9mMx+LeLzvFeNi9H/ki8iK0HLjkVpx3Kv2Si5v5Zu1wPONhcyb8XjrC7baIB0vRahDvLP0witNopF8v+2675LifjIadBdfykPmDe47bi/FNR1xGvVVf75XUNxegU1r54JFOt+Nhrwm6aLAG5E7D0XAwp3531huOI7bo9eWwGXnhenpx3kU8jpbjMnqqSzsPx4/nRqjeo3UdxUzvRCO/m3it2UX/vLPi7qAU5/Mprz63mikLG8kN6EfxYHnht7WxG30c9Qd47JsIfDMfDXuzSp53Xvl6/oLOszWPyfpybs6Y38+982bJ9MZyELdz4fdf8CkCebWO6Rh0OMC26YdbNPWi7orF4nbs34H/e9G45b2i4zSs+DXWeqlw7173p9tGI8AOfHDPsLm4jdtFheXF7Rv2QO1SuMD3lpeD3++3tqd7uDIv7s2EexYOB/neutf3AZzicRx9FP4dkjdv3+fputf3YX57XXHmUH9dDweIuqR84OK8c601vcuoG4mzdjnWB0XFsYtWZ8bcjsb6YPsB/hr5d6HwtSZf9M52HH1lnw2O7mA51ntJbY8bgY1vwH67po8HH+H7nJcPfguut7HsR7HXmiZ8F+fPYynayO+Z3O2Hw5sG+XDTCPs1J5v5aBhFPOoisEXj5Vu43F3xuB9ethoJrex7MXY15i26H6s88NhHl6UzvQVHAt/WrMoH7t1M+oCzO4N8cYdoqxnKm8bd1WkD8uqgziPeOdhwPihZzYFmKlrGRkd/nDPcRhD3GzvmOxmQI1uzmLlk9oqfk7EPucKdVn753Ts9W1+d5tv88CKeazgTzPGw4+3WXraa+89e4wT4TgCuB/gynqVjPLsdYVI+zgdfiAclnE9ldR554Xwq38Dnvkvu6bCXMmy8kQsw1x+0wU9rjgfzd+F0PEBi2Knz/iZ+6lx4cH72Qm93jpG6HoC1fCvbO++VcLbUZ0mlb/XaK9/STPIkTsPohfpNSKhZbwqaPS816/FN9R1gx9QCx1I5DahqOAZWmdSZioUA2xAV3NqvKtcynM4qoegEPR0pyrRShlR/T0d2xfWTqn2jxkLIu0rYw9M/f3mp/l3RLKwK/e62DqZ1HXy2gnr6ttr7qegklRndFr97mq5oVHcRR125rmr866qr8KAC3BOxqcm92lWGg20iwEs6xppqaKZUCQdXmchG3NaFqTt8b3m2XHhxLEVICxmV+93JZoegkNn/2gX0/zDinCBKCGDEEao6JNhYCKIyITXTsizMbXwoRhpGhyKkfRuEejJOVvKtIBGEEOFUqFYQ2KohDEclpjBUQ1omtwhGANu7gGSaFjYg2FXGsQXsQJbqCCNQHWQaAQ9sYdrsK4CEvw1IFTzdpGgny4X4G3SoJJoAEFTbwIBJILkKWUaqDGnY1BDTTI28CzoaQZyY2FQDnUAIkaBCRwSqwBwDXyRB9v7G74GO/u3QaUSZpKL0FnUU/Q1GiCJhU4eqJne4apgBwKMhQxW67lDLMoVO7XfBiOk4YIxzlZoUjiLKApUQCCOiObZmCB0Lc59b74GR8W0wqmE5215jvYxOgATTNByotsMk5Lfq3oxxouqOQaSgNrO5+S7oWDbCBtYkhC7EjWHoXCWMQPzaAZDCoczSv0YEmd8QndMwfw0eHNiONHVT1amFVQMhDYLH0lTsSMwEVIDcfp/gQcLizJS6qgeBDpnV1FVGMFNR4DiaYIHUhf4V4LEewbP7+HB9tnWVW4mpbxUfDfEkimiaS/FodDO4w3n/4viweuzzLo4bQkihFInSkyAnL5S9LPpwe7xZ8B3cFRfyrlp4dHwbFpE8VlipHDeyIsyLY+Vfx1c0Bdof/1uhO8uKmVRqH508bzQCCXqIBudwvhcvUTAgujQsoqmBzQRkCA546BAAthEYjkUsHZnoYAoezED0FRl4WDnzeQysf4mAEkvZq7G+Y+Z1EyUHrXMlqFSG/5kyOTpug/UQPVl5PNn/ReKtTMMy0AwJkc80SqBphZrBQchRTcp4YJi6AYfjz8W0w9qaL8C0Tdf1Y/CsVniX5rKN4kqQJfHn5zSEdYkcKEcRl3DGVDcjxNCwynSd6w7RscXoz8W0w8r/L8C0bWOihIsf6FCd7I7VyZES5gp9sOGzKUdtm9ocijjhYADAoFilHDKcAPJxKONM9LMlt8N6ms+jXE0x5Vmf9R1TbaPx1rxPJhXljs4MrFqaBudHUJ2d0kYqYsR0sGEy5xN66++aVId1Yl+CVM/bw++eVWKr8qfSyiEa9P4QtLqsr9U0ojoGslXL4QHSAmpagfaD0qp628zccGM3+OdfHj5anQslAAA= Click on Import. This will import several actions that deal with processing the websocket messages from Audica and the response messages that go to your twitch chat. Step 2: Fix one thing There will be one reference missing from one of the C# subactions, so we need to fill it in. In the Actions tab, click on Audica Websocket Server. In the Subactions list on the right, double-click on Execute Code. At the bottom set of tabs, click on References. In the list of references, right-click and select Add reference from file.... By default, it should put you in the correct directory where the right files are. There is one missing file, add this file: System.Core.dll Once done, your references should look like this: Click Save and Compile. Step 3: Setup the websocket client in streamer.bot for Audica In the “Servers” tab, goto the “Websocket Clients” tab. Right-click and add a new websocket client. Fill in the following parameters: Name: Audica Websocket (This is what I used but it can be anything) Endpoint: ws://127.0.0.1:8085/AudicaStats Ensure Auto Connect on Startup and Reconnect on Disconnect are checked. Under Actions, for the Message action, click the button and choose Audica Websocket Message Your settings should look similar to this: Click OK. Step 4: Test it! Fire up Audica. Once it’s started (at the Audica title screen at least), try requesting a song in your twitch chat. ex: !asr kepler. You should see a response like this: Troubleshooting If you didn’t see anything right away, in streamer.bot, goto the Servers/Clients tab, click on Websocket Clients, and make sure the Audica websocket client is connected. You can right-click on it and click Connect to trigger a connection attempt in case it hasn’t tried to connect. Also make sure you are using the latest versions of the AudicaWebsocketServer mod and the SongRequest mod. Enjoy! If you have questions or discussion points, feel free to drop into my discord server here! Steg.","dateModified":"2022-02-20T03:00:00+00:00","datePublished":"2022-02-20T03:00:00+00:00","headline":"Add bot responses to !asr twitch commands in Audica","mainEntityOfPage":{"@type":"WebPage","@id":"/audica/streamer.bot/streaming/twitch/2022/02/20/audica-bot-responses.html"},"@type":"BlogPosting","url":"/audica/streamer.bot/streaming/twitch/2022/02/20/audica-bot-responses.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Steglasaurous" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Steglasaurous</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Add bot responses to !asr twitch commands in Audica</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2022-02-20T03:00:00+00:00" itemprop="datePublished">Feb 20, 2022
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Here’s how to add twitch responses to !asr commands for Audica. Admittedly, this isn’t the cleanest or simplest solution, 
+but it works.  :)</p>
+
+<h1 id="prerequisites">Prerequisites</h1>
+
+<p>Make sure these are installed before continuing:</p>
+
+<ul>
+  <li><a href="https://github.com/Silzoid/SongRequest">SongRequest</a> mod v2.1.0 or better (released on Feb 19 2022)</li>
+  <li><a href="https://github.com/steglasaurous/audica-websocket-server">AudicaWebsocketServer</a> mod v1.1 or better</li>
+  <li><a href="https://streamer.bot">Streamer.bot</a> installed and connected to Twitch. (tested on v0.1.7 but earlier versions <em>should</em> work)</li>
+</ul>
+
+<h1 id="step-1-load-actions-into-streamerbot">Step 1: Load actions into Streamer.bot</h1>
+
+<ol>
+  <li>
+    <p>In Streamer.bot, goto the <code class="language-plaintext highlighter-rouge">Actions</code> tab.</p>
+  </li>
+  <li>
+    <p>Right-click anywhere in the actions list on the left, and click on <code class="language-plaintext highlighter-rouge">Import</code>.</p>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_1.png" alt="img_1.png" /></p>
+  </li>
+  <li>
+    <p>Copy the giant piece of text below, and in the text box at the top, paste it.</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>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
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Click on <code class="language-plaintext highlighter-rouge">Import</code>.  This will import several actions that deal with processing the websocket messages
+from Audica and the response messages that go to your twitch chat.</p>
+  </li>
+</ol>
+
+<p><img src="/assets/2022-02-19-audica-bot-responses/img_2.png" alt="img_2.png" /></p>
+
+<h1 id="step-2-fix-one-thing">Step 2: Fix one thing</h1>
+
+<p>There will be one reference missing from one of the C# subactions, so we need to fill it in.</p>
+
+<ol>
+  <li>
+    <p>In the Actions tab, click on <code class="language-plaintext highlighter-rouge">Audica Websocket Server</code>.</p>
+  </li>
+  <li>
+    <p>In the Subactions list on the right, double-click on <code class="language-plaintext highlighter-rouge">Execute Code</code>.</p>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_3.png" alt="img_3.png" /></p>
+  </li>
+  <li>
+    <p>At the bottom set of tabs, click on <code class="language-plaintext highlighter-rouge">References</code>.</p>
+  </li>
+  <li>
+    <p>In the list of references, right-click and select <code class="language-plaintext highlighter-rouge">Add reference from file...</code>.</p>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_4.png" alt="img_4.png" /></p>
+  </li>
+  <li>
+    <p>By default, it should put you in the correct directory where the right files are.  There is one missing file, add this file:</p>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">System.Core.dll</code></li>
+    </ul>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_5.png" alt="img_5.png" /></p>
+
+    <p>Once done, your references should look like this:</p>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_6.png" alt="img_6.png" /></p>
+  </li>
+  <li>
+    <p>Click <code class="language-plaintext highlighter-rouge">Save and Compile</code>.</p>
+  </li>
+</ol>
+
+<h1 id="step-3-setup-the-websocket-client-in-streamerbot-for-audica">Step 3: Setup the websocket client in streamer.bot for Audica</h1>
+
+<ol>
+  <li>
+    <p>In the “Servers” tab, goto the “Websocket Clients” tab.</p>
+  </li>
+  <li>
+    <p>Right-click and add a new websocket client.</p>
+
+    <p><img src="/assets/2022-02-19-audica-bot-responses/img_7.png" alt="img_7.png" /></p>
+  </li>
+  <li>
+    <p>Fill in the following parameters:</p>
+
+    <ul>
+      <li><strong>Name</strong>: Audica Websocket  (This is what I used but it can be anything)</li>
+      <li><strong>Endpoint</strong>: <code class="language-plaintext highlighter-rouge">ws://127.0.0.1:8085/AudicaStats</code></li>
+      <li>Ensure <strong>Auto Connect on Startup</strong> and <strong>Reconnect on Disconnect</strong> are checked.</li>
+      <li>Under <strong>Actions</strong>, for the <strong>Message</strong> action, click the button and choose <strong>Audica Websocket Message</strong></li>
+    </ul>
+  </li>
+  <li>
+    <p>Your settings should look similar to this:</p>
+  </li>
+</ol>
+
+<p><img src="/assets/2022-02-19-audica-bot-responses/img_8.png" alt="img_8.png" /></p>
+
+<ol>
+  <li>Click OK.</li>
+</ol>
+
+<h1 id="step-4-test-it">Step 4: Test it!</h1>
+
+<p>Fire up Audica.  Once it’s started (at the Audica title screen at least), try requesting a song
+in your twitch chat.  ex: <code class="language-plaintext highlighter-rouge">!asr kepler</code>.  You should see a response like this:</p>
+
+<p><img src="/assets/2022-02-19-audica-bot-responses/img.png" alt="img.png" /></p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<p>If you didn’t see anything right away, in streamer.bot, goto the <code class="language-plaintext highlighter-rouge">Servers/Clients</code> tab, click on <code class="language-plaintext highlighter-rouge">Websocket Clients</code>, and make sure
+the Audica websocket client is connected.  You can right-click on it and click <code class="language-plaintext highlighter-rouge">Connect</code> to trigger a connection attempt
+in case it hasn’t tried to connect.</p>
+
+<p>Also make sure you are using the latest versions of the <a href="https://github.com/steglasaurous/audica-websocket-server">AudicaWebsocketServer</a> mod and the <a href="https://github.com/Silzoid/SongRequest">SongRequest</a> mod.</p>
+
+<p>Enjoy!  If you have questions or discussion points, feel free to drop into my discord
+server <a href="https://discord.gg/j6qArwGDu6">here</a>!</p>
+
+<p>Steg.</p>
+
+
+  </div><a class="u-url" href="/audica/streamer.bot/streaming/twitch/2022/02/20/audica-bot-responses.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Steglasaurous</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Steglasaurous</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/steglasaurous"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">steglasaurous</span></a></li><li><a href="https://www.twitter.com/steglasaurous"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">steglasaurous</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Random scratchings from a dinosaur.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
